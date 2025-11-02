@@ -210,6 +210,17 @@ h1 {
     background-color: #4cae4c;
 }
 
+/* --- 初期パスワードフォーム(中央表示用) --- */
+#login-form.initial-gate-mode {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1960;
+    margin-bottom: 0;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.25);
+    max-width: 450px;
+}
 
 /* --- ゲームエリア --- */
 #game-area {

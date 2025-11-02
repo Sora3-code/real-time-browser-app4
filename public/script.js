@@ -76,8 +76,11 @@ window.addEventListener('DOMContentLoaded', () => {
 // --- start button ---
 startButton.addEventListener('click', () => {
     startContainer.classList.add('hidden');
-    authContainer.classList.remove('hidden');
-    loginUsernameInput.focus();
+    intermissionLoginForm.classList.remove('hidden');
+    intermissionLoginForm.classList.add('initial-gate-mode');
+    initialLoginTitle.classList.remove('hidden');
+    intermissionTitle.classList.add('hidden');
+    passwordInput.focus();
     document.body.classList.add('auth-background');
 });
 
@@ -143,8 +146,13 @@ resetMyModalsButton.addEventListener('click', () => {
 // --- In-game Progression Passwords ---
 loginButton.addEventListener('click', () => {
     const password = passwordInput.value;
-    // Note: The 'initial' type is no longer used for main login
-    socket.emit('checkPassword', { password: password, type: 'main_intermission' });
+    let checkType = '';
+    if(!initialLoginTitle.classList.contains('hidden')) {
+        checkType = 'initial_gate';
+    } else {
+        checkType = 'main_intermission';
+    }
+    socket.emit('checkPassword', { password: password, type: checkType });
 });
 
 alertLoginButton.addEventListener('click', () => {
@@ -246,7 +254,12 @@ socket.on('modalTaken', ({ modalId, userId }) => {
 // --- In-game Password Results ---
 socket.on('passwordResult', (result) => {
     if (result.success) {
-        if (result.type === 'main_intermission') {
+        if (result.type === 'initial_gate') {
+            intermissionLoginForm.classList.add('hidden');
+            intermissionLoginForm.classList.remove('initial-gate-mode');
+            authContainer.classList.remove('hidden');
+            loginUsernameInput.focus();
+        } else if (result.type === 'main_intermission') {
             intermissionLoginForm.classList.add('hidden');
             getItemButton.disabled = false;
         } else if (result.type === 'alert') {

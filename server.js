@@ -167,7 +167,9 @@ io.on('connection', (socket) => {
     // --- In-game Password Checks ---
     socket.on('checkPassword', ({ password, type }) => {
         let isCorrect = false;
-        if (type === 'main_intermission' && password === MAIN_INTERMISSION_PASSWORD) {
+        if (type === 'initial_gate' && password === MAIN_INTERMISSION_PASSWORD) {
+            isCorrect = true;
+        } else if (type === 'main_intermission' && password === MAIN_INTERMISSION_PASSWORD) {
             isCorrect = true;
         } else if (type === 'alert' && password === ALERT_PASSWORD) {
             isCorrect = true;
@@ -176,7 +178,7 @@ io.on('connection', (socket) => {
         if (isCorrect) {
             socket.emit('passwordResult', { success: true, type: type });
         } else {
-            socket.emit('passwordResult', { success: false });
+            socket.emit('passwordResult', { success: false, type: type });
         }
     });
 
